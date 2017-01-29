@@ -21,4 +21,7 @@ def check(msg, bot):
 	elif command == "info":
 		res = info()
 
+	elif command == "ping":
+		res = "Pong"
+
 	return res

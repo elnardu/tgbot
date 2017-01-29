@@ -14,8 +14,8 @@ def on_chat_message(msg):
 	if str(chat_id) in chats:
 		logging.info(msg)
 		# bot.sendMessage(chat_id, 'Hi!')
+		res = check(msg, bot)
 
-	res = check(msg, bot)
 	if res:
 		bot.sendMessage(chat_id, res, parse_mode='markdown')
 
