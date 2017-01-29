@@ -1,8 +1,10 @@
-import logging, os, time
+import logging, os, time, config
 dir_name = os.path.dirname(os.path.abspath(__file__))
 
-# logging.basicConfig(filename=dir_name+'/bot.log', level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
-logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s]: %(message)s')
+if config['logToFile']:
+	logging.basicConfig(filename=dir_name+'/bot.log', level=logging.INFO, format='%(asctime)s [%(levelname)s]: %(message)s')
+else:
+	logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s]: %(message)s')
 
 
 from bot.bot import start_update_loop
