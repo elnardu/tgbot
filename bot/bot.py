@@ -15,6 +15,8 @@ def on_chat_message(msg):
 		logging.info(msg)
 		# bot.sendMessage(chat_id, 'Hi!')
 		res = check(msg, bot)
+	else:
+		res = '*Unauthorized*'
 
 	if res:
 		bot.sendMessage(chat_id, res, parse_mode='markdown')

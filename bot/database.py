@@ -29,8 +29,8 @@ def addEvent(eventType, duration):
 	return 'Добавленно действие *{}* которое длилось *{}* минут с *{}* по *{}*'.format(
 			eventType,
 			frmDuration(duration),
-			(startTime + tz).strftime('%H:%M:%S'),
-			(finishTime + tz).strftime('%H:%M:%S')
+			(startTime + tz).strftime('%H:%M'),
+			(finishTime + tz).strftime('%H:%M')
 		)
 
 def startEvent(eventType):
@@ -71,7 +71,7 @@ def finishEvent():
 	return 'Законченно действие *{}*, которое длилось *{}* минут с *{}*'.format(
 			eventType,
 			frmDuration(duration),
-			(startTime+tz).strftime('%H:%M:%S')
+			(startTime+tz).strftime('%H:%M')
 		)
 
 def info():
@@ -85,18 +85,18 @@ def info():
 	return 'Текущее действие *{}*, которое длится *{}* минут с *{}*'.format(
 			eventType,
 			frmDuration(duration),
-			(startTime+tz).strftime('%H:%M:%S')
+			(startTime+tz).strftime('%H:%M')
 		)
 
 def getLast(limit):
 	docs = col.find().sort('start', -1).limit(int(limit))
 	table = []
-	headers = ["event", "start", "finish", "duration"]
+	headers = ["ev", "st", "fi", "du"]
 	for doc in docs:
 		table.append([
 			doc['type'],
-			(doc['start']+tz).strftime('%H:%M:%S'),
-			(doc['finish']+tz).strftime('%H:%M:%S') if doc.get('finish') else None,
+			(doc['start']+tz).strftime('%H:%M'),
+			(doc['finish']+tz).strftime('%H:%M') if doc.get('finish') else None,
 			frmDuration(doc['duration']) if doc.get('duration') != None else None
 		])
 	res ="```\n" + tabulate(table, headers=headers, tablefmt="simple") + "```"

@@ -1,4 +1,4 @@
-import logging
+import logging, subprocess
 from .database import *
 
 def check(msg, bot):
@@ -25,6 +25,10 @@ def check(msg, bot):
 		if len(args) < 2:
 			args += [5]
 		res = getLast(args[1])
+
+	elif command == "e":
+		res = subprocess.check_output(args[1:])
+		res = "```\n" + str(res.decode("utf-8")) + "```"
 
 	elif command == "ping":
 		res = "Pong"
