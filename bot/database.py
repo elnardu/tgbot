@@ -1,5 +1,7 @@
 from pymongo import MongoClient
 import datetime, logging
+from tabulate import tabulate
+from .utils import frmDuration
 
 client = MongoClient('localhost', 27017)
 db = client.timelog
@@ -26,7 +28,7 @@ def addEvent(eventType, duration):
 	logging.info('Added new event. [{}], {} minutes'.format(eventType, duration))
 	return 'Добавленно действие *{}* которое длилось *{}* минут с *{}* по *{}*'.format(
 			eventType,
-			duration,
+			frmDuration(duration),
 			(startTime + tz).strftime('%H:%M:%S'),
 			(finishTime + tz).strftime('%H:%M:%S')
 		)
@@ -68,7 +70,7 @@ def finishEvent():
 	logging.info('Finished event. [{}], {} minutes'.format(eventType, duration))
 	return 'Законченно действие *{}*, которое длилось *{}* минут с *{}*'.format(
 			eventType,
-			duration,
+			frmDuration(duration),
 			(startTime+tz).strftime('%H:%M:%S')
 		)
 
@@ -82,8 +84,24 @@ def info():
 	duration = int((datetime.datetime.utcnow()-startTime).seconds/60)
 	return 'Текущее действие *{}*, которое длится *{}* минут с *{}*'.format(
 			eventType,
-			duration,
+			frmDuration(duration),
 			(startTime+tz).strftime('%H:%M:%S')
 		)
 
-__all__ = ['addEvent', 'startEvent', 'finishEvent', 'info']
+def getLast(limit):
+	docs = col.find().sort('start', -1).limit(int(limit))
+	table = []
+	headers = ["event", "start", "finish", "duration"]
+	for doc in docs:
+		table.append([
+			doc['type'],
+			(doc['start']+tz).strftime('%H:%M:%S'),
+			(doc['finish']+tz).strftime('%H:%M:%S') if doc.get('finish') else None,
+			frmDuration(doc['duration']) if doc.get('duration') != None else None
+		])
+	res ="```\n" + tabulate(table, headers=headers, tablefmt="simple") + "```"
+	return res
+
+
+
+__all__ = ['addEvent', 'startEvent', 'finishEvent', 'info', 'getLast']

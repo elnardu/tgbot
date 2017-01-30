@@ -21,6 +21,11 @@ def check(msg, bot):
 	elif command == "info":
 		res = info()
 
+	elif command == "last":
+		if len(args) < 2:
+			args += [5]
+		res = getLast(args[1])
+
 	elif command == "ping":
 		res = "Pong"
 
